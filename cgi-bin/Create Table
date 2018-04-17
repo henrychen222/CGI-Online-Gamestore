@@ -1,0 +1,50 @@
+CREATE TABLE game (
+    ASIN        VARCHAR(10) NOT NULL,
+    title       VARCHAR(20),
+    developers  VARCHAR(50),
+    price       VARCHAR(20),
+    PRIMARY KEY (ASIN)
+);
+
+
+CREATE TABLE developer (
+    d_id       VARCHAR(10) NOT NULL,
+    name       VARCHAR(20),
+    games      VARCHAR(50),
+    PRIMARY KEY (d_id)
+);
+
+CREATE TABLE customer (
+    c_id       VARCHAR(10) NOT NULL,
+    name       VARCHAR(20),
+    p_games    VARCHAR(50),
+    quantity   VARCHAR(20),
+    t_amount   VARCHAR(20)
+    PRIMARY KEY (c_id)
+);
+
+
+//11.3
+CREATE TABLE game (
+    ASIN          VARCHAR(10),
+    g_title       VARCHAR(20),
+    g_developers  VARCHAR(50),
+    g_price       VARCHAR(20),
+    PRIMARY KEY (ASIN)
+);
+
+CREATE TABLE developer (
+    d_id       VARCHAR(10) auto_increment,
+    d_name       VARCHAR(20),
+    d_games      VARCHAR(50),
+    PRIMARY KEY (d_id)
+);
+
+CREATE TABLE customer (
+    c_id       VARCHAR(10) auto_increment,
+    c_name       VARCHAR(20),
+    pur_games    VARCHAR(50),
+    pur_quantity   VARCHAR(20),
+    t_amount   VARCHAR(20),
+    PRIMARY KEY (c_id)
+);

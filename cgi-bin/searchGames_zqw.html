@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript">
+		
+			var currentName = "";
+			window.onload=function(){ 
+				
+				var url_params = new URL(window.location).searchParams;
+				currentName = url_params.get("name");
+				alert("currentName:"+ currentName);
+				getGames();
+			} 
+			function getGames(){
+				var url = "../../cgi-bin/getGames_zqw.cgi";
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function(){
+					if(this.readyState == 4 && this.status == 200){//&& this.status == 200
+						getDevelerpsResponse(this.responseText);
+					}
+				}
+				//document.getElementById("test001").innerHTML = "test_2";//test
+				var param = "";
+				xmlhttp.open("POST",url,true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send(param); 
+			}
+			function getDevelerpsResponse(response){
+				//document.getElementById("test001").innerHTML = response;//test			
+				//var result = JSON.parse(response);
+				var result = eval('(' + response + ')');
+				//alert(result[0].Asin);//test	
+				var out = "";
+				var i;
+				
+				for(var i = 0; i < result.length; i++){
+					//out += '<tr><td>'+result[i].Asin+'</td><td><a href="listGameWith_LinkDev_zqw.html?Asin='+result[i].Asin+'">'
+					//+result[i].Title+'</a></td><td>'+result[i].Price
+					//+'</td><td><a href="addDevelopersToGame_zqw.html?Asin='+result[i].Asin+'">AddDeveloper</a></td></tr>';
+					
+					out += "<tr><td><input id=\""+result[i].Asin+"\" type=\"checkbox\" name=\"isBuying\" value=\"" 
+					+ result[i].Title + "\" /></td><td><a href=\"listGameWith_LinkDev_zqw.html?Asin="+result[i].Asin 
+					+"\">"+result[i].Title + '</a></td><td>'+result[i].Price 
+					+ '</td><td><input type="number" id="quantity_'+result[i].Asin+'" value="0"/></td></tr>';
+				
+				}
+				document.getElementById("games").innerHTML = out;
+				
+			}
+			
+			function purchase(){
+				var inputs = document.querySelectorAll('input[name="isBuying"]:checked');
+				var params = ["id="+encodeURIComponent(url_params.get("id"))];
+				var titles = "";
+				var titlesFirst = true;
+				var quantity = "";
+				var quantityFirst = true;
+				for(var i = 0; i < inputs.length; i++){
+					if(titlesFirst){
+						titlesFirst=false;
+						titles += inputs[i].value;
+					}else{
+						titles += "-";
+						titles += inputs[i].value;
+					}
+					if(quantityFirst){
+						quantityFirst=false;
+						quantity += document.getElementById("quantity_"+inputs[i].id).value;
+					}else{
+						quantity += "-";
+						quantity += document.getElementById("quantity_"+inputs[i].id).value;
+					}
+				
+				}
+				document.getElementById("test001").innerHTML = titles;
+				document.getElementById("test002").innerHTML = quantity;
+				
+				
+				var url = "../../cgi-bin/PurchaseGame_zqw.cgi";
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function(){
+					if( this.readyState == 4 && this.status == 200){
+						purchase_response( this.responseText );
+					}
+				}
+				var param = "titles="+titles+"&quantity="+quantity;
+				xmlhttp.open("POST",url,true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send(param);
+			}
+			function purchase_response( response ){
+				var result = eval('(' + response + ')');
+				
+				if(result.success == true){
+					alert(success);
+				}
+				else {
+					alert(operating failed,please purchase again!);
+				}
+			}
+		</script>
+	
+	</head>
+	<body>
+		<div id="test001"></div>
+		<div id="test002"></div>
+		<link rel="stylesheet" href="styles.css">
+		<nav id="nav01"></nav>
+		Fill Developer Names separated by spaces: <br />
+		<input id="search" type="text" name="search" />
+		<br />
+		<button name="act" onclick="search()">Search</button>
+		<table>
+		<tr><th>isChoosed</th><th>Title</th><th>Price</th><th>Quantity</th></tr>
+		<tbody id="games"></tbody>
+		</table>
+		<button id="purchase" name="purchase" onclick="purchase()" >Purchase</button>
+		
+	</body>
+</html>
