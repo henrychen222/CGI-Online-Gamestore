@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<!--
+		<meta content='noindex,nofollow' name='robots'>
+		<link rel="stylesheet" type="text/css"
+		href="http://wenchen.cs.und.edu/css/1.css" />-->
+		<title>Interface I</title>
+		<script>
+			function register(){
+				var url = "../../cgi-bin/Register_zqw.cgi";
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function(){
+					if(this.readyState == 4 && this.status == 200){//&& this.status == 200
+						getDevelerpsResponse(this.responseText);
+					}
+				}
+				//document.getElementById("test001").innerHTML = "test2";//test
+				//alert(document.getElementById("username"));//test
+				var param = "";
+				param = "username="+document.getElementById("username").value+ "&password="+document.getElementById("password").value;
+				xmlhttp.open("POST",url,true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send(param); 
+			}
+			
+			function getDevelerpsResponse(response){
+				document.getElementById("alert").innerHTML = "test_8";//test
+				document.getElementById("alert").innerHTML = response;
+				
+				//var result = JSON.parse(response);
+				var result = eval('(' + response + ')');
+				alert(result.status);
+				
+				if(result.status == "true"){
+					//window.location.href = "view_customer.html?id="+result.Id+"&cid="+result.Id;
+					document.getElementById("status").innerHTML = "Register Success";//test
+					
+					//window.location.href = "Login.html";
+				}
+				else {
+					document.getElementById("alert").innerHTML = "Unable to register";
+				}
+			}
+			
+			function test(){
+			
+			
+				//window.location.href = "Login_zqw.html";
+				var jsontext = '{"firstname":"Jesper","surname":"Aaberg","phone":["555-0100","555-0120"]}';
+				document.write(jsontext);
+				
+				//var contact = JSON.parse('{"firstname":"Jesper","surname":"Aaberg","phone":["555-0100","555-0120"]}');
+				var contact = eval('(' + jsontext + ')');
+				document.write("here");
+				document.write(contact.surname + ", " + contact.firstname);
+				document.write(contact.phone[1]);
+			}
+			function test2(){
+				var test = "<h3 id=\"header_text\">Enter Games</h3>";
+				document.getElementById("test002").innerHTML = test;//test
+			}
+			function getXhr(){
+				 var xmlHttp;
+			   try{ // Firefox, Opera 8.0+, Safari
+					xmlHttp=new XMLHttpRequest();
+				}
+				catch (e){
+				   try{// Internet Explorer
+						 xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+					  }
+					catch (e){
+					  try{
+						 xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+					  }
+					  catch (e){}
+					  }
+				}
+
+				return xmlHttp;
+			}
+		</script>
+	</head>
+	<font size='0'><br /></font>
+	
+	<body text='#000000' vLink='#3366CC' link='#3366CC' bgColor='#ffffff' alink='#3366CC' background='http://wenchen.cs.und.edu/figure/bg4.png'>
+		<div id="alert"></div>
+		<div id="test001"></div>
+		<div id="test002"></div>
+		<table width='100%' height='80%'>
+			<tr>
+				<td align='center' valign='middle'>
+					<table width="75%" cellspacing="0" cellpadding="15" border="0" class="shadow">
+						<form method="get" action="http://people.aero.und.edu/~wchen/cgi-bin/Register.cgi">
+							<tr bgcolor="#336699">
+								<th id="header" align="left" colspan="3">
+									<font face="Verdana, Arial, Helvetica" color="white" size="2"> &nbsp; Register</font>
+								</th>
+							</tr>
+							<tr bgcolor="#CCEEFF">
+								<td width="100%" valign="middle">
+									<font face="Verdana, Arial, Helvetica" size="2">
+										<font size="0"><br /></font>
+										&nbsp; &nbsp; &nbsp; Name:
+										<input type="text" id="username" name="username" size="32" value=""> &nbsp; &nbsp; &nbsp; <font id="status"></font><br /><font size="0"><br /></font>
+										&nbsp; &nbsp; &nbsp; Password:
+										<input type="password" id="password" name="password" size="12" maxlength="12" value="">
+										<!--
+										&nbsp; &nbsp; &nbsp; Confirm Password:
+										<input type="password" name="comPassword" size="12" maxlength="12" >
+										-->										
+										<?php echo $error; ?>
+									</font>
+									<p align="center">
+										<input type="button" name="act" value="Submit" onclick="register()">
+										&nbsp; &nbsp; &nbsp; &nbsp;
+										<input type="button" name="act" value="home" onclick="location.href='Login_zqw.html'">
+
+										<br /><font size="0"><br /></font>
+									</p>
+								</td>
+							</tr>
+						</form>
+					</table>
+				</td>
+			</tr>
+		</table>
+		
+	</body>
+</html>

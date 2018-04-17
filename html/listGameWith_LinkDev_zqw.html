@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript">
+			window.onload=function(){ 
+				getGames();
+			} 
+			function getGames(){
+				var url_params = new URL(window.location).searchParams;
+				document.getElementById("test001").innerHTML = url_params.get("Asin");//test
+				var url = "../../cgi-bin/getGames_zqw.cgi";
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function(){
+					if(this.readyState == 4 && this.status == 200){//&& this.status == 200
+						getDevelerpsResponse(this.responseText);
+					}
+				}
+				//document.getElementById("test001").innerHTML = "test_2";//test
+				var param = "Asin="+url_params.get("Asin");
+				xmlhttp.open("POST",url,true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send(param); 
+			}
+			function getDevelerpsResponse(response){
+				document.getElementById("test001").innerHTML = response;//test			
+				//var result = JSON.parse(response);
+				var result = eval('(' + response + ')');
+				//alert(result[0].Asin);//test	
+				var info = result[0];
+				if(info.hasOwnProperty("Asin"))
+				{
+					document.getElementById("game_asin").innerHTML = info.Asin;
+				}
+				if(info.hasOwnProperty("Title"))
+				{
+					document.getElementById("game_title").innerHTML = info.Title;
+				}
+				if(info.hasOwnProperty("Price"))
+				{
+					document.getElementById("game_price").innerHTML = info.Price
+				}
+				var out = "";
+				var arr = result[0].Developers;
+				if( arr.length == 0)
+				{
+					out += "No developers"
+				}
+				else
+				{
+					var i;
+					for(i = 0; i < arr.length; i++)
+					{
+						//out += "<a href=\"view_developer.html?did=" + arr[i].Id + "&id=" + url_params.get("id") + "\">" + arr[i].Name + "</a><br />";
+						out += "<br /><a href=\"listDeveloper_withLinkTitle.html?Asin="+arr[i]+"\">" + arr[i] + "</a><br />";
+					}
+					document.getElementById("game_devs").innerHTML = out;
+				}
+			}
+			
+		</script>
+	
+	</head>
+	<body>
+		<div id="test001"></div>
+		<div id="test002"></div>
+		<link rel="stylesheet" href="styles.css">
+		<nav id="nav01"></nav>
+		<script src="NavScript.js"></script>
+		<h3>Game Information</h3>
+		<span id="debug"></span> 
+		<a id="edit_button" href="#" style="display:none" >Edit</a>
+		<p>ASIN: <span id="game_asin"></span>
+		<p>Game Title: <span id="game_title"></span></p>
+		<p>Price: $<span id="game_price">0.00</span></p>
+		<p>Developers:</p><br>
+		<span id="game_devs"></span>
+		
+	</body>
+</html>

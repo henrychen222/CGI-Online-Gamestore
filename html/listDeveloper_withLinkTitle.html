@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript">
+			window.onload=function(){ 
+				getDevs();
+			} 
+			function getDevs(){
+				var url_params = new URL(window.location).searchParams;
+				document.getElementById("test001").innerHTML = "11";//test
+				document.getElementById("test002").innerHTML = url_params.get("name");//test
+				var url = "../../cgi-bin/getDevelopers_zqw.cgi";
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function(){
+					if(this.readyState == 4 && this.status == 200){//&& this.status == 200
+						getDevelerpsResponse(this.responseText);
+					}
+				}
+				var param = "Asin="+url_params.get("name");
+				xmlhttp.open("POST",url,true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send(param); 
+			}
+			function getDevelerpsResponse(response){
+				document.getElementById("test001").innerHTML = response;//test			
+				//var result = JSON.parse(response);
+				var result = eval('(' + response + ')');
+				//alert(result[0].Asin);//test	
+				var info = result[0];
+				if(info.hasOwnProperty("Name"))
+				{
+					document.getElementById("dev_name").innerHTML = info.Name;
+				}
+				var out = "";
+				var arr = info.Games;
+				if(arr.length == 0)
+				{
+					out += "No games have been developed";
+				}
+				else
+				{
+					var i;
+					for(i = 0; i < arr.length; i++)
+					{
+						out += "<br /><a href=\"listGameWith_LinkDev_zqw.html?Asin=" + arr[i].Asin + "\">" + arr[i].Title + "</a><br />";
+					}
+				}
+				document.getElementById("dev_games").innerHTML = out;
+				
+			}
+			var xmlhttp = new XMLHttpRequest();
+			var url = "../../cgi-bin/513/1/FullDevInfo.cgi" + window.location.search
+			var url_params = new URL(window.location).searchParams;
+			xmlhttp.onreadystatechange = function()
+			{
+				//document.getElementById("debug").innerHTML = this.responseText;
+				if(this.readyState == 4 && this.status == 200)
+				{
+					parseFullDevInfo( this.responseText );
+				}
+			}
+			xmlhttp.open("GET",url,true);
+			xmlhttp.send();
+			function parseFullDevInfo( response )
+			{
+				//document.getElementById("debug").innerHTML = response;
+				if(response == ""){
+					return;
+				}
+				var info = JSON.parse(response);
+				
+			}
+		</script>
+	</head>
+	<body>
+		<div id="test001"></div>
+		<div id="test002"></div>
+		<link rel="stylesheet" href="styles.css">
+		<nav id="nav01"></nav>
+		<script src="NavScript.js"></script>
+		<h3>Developer Information</h3>
+		<span id="debug"></span>
+		
+		<p>Developer Name: <span id="dev_name"></span></p>
+		
+		<p>Games Developed:<span id="dev_games"></span></p>
+
+	</body>
+</html>
+

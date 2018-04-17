@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script>
+			window.onload=function(){ 
+
+				//document.getElementById("test001").innerHTML = "test_1";//test
+				getGames();
+			} 
+			function getGames(){
+				var url = "../../cgi-bin/getGames_zqw.cgi";
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function(){
+					if(this.readyState == 4 && this.status == 200){//&& this.status == 200
+						getDevelerpsResponse(this.responseText);
+					}
+				}
+				//document.getElementById("test001").innerHTML = "test_2";//test
+				var param = "";
+				xmlhttp.open("POST",url,true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send(param); 
+			}
+			function getDevelerpsResponse(response){
+				//document.getElementById("test001").innerHTML = response;//test			
+				//var result = JSON.parse(response);
+				var result = eval('(' + response + ')');
+				//alert(result[0].Asin);//test	
+				var out = "";
+				var i;
+				
+				for(i = 0;i < result.length; i++){
+					out += '<tr><td>'+result[i].Asin+'</td><td>'+result[i].Title+'</td>'
+					+'<td>'
+					+'<input id="'+result[i].Asin+'" type="number" name="price"  min="0.00"  value="'+result[i].Price+'"/>'
+					+'</td></tr>';
+				}
+				document.getElementById("games").innerHTML = out;
+				//document.getElementById("developers").innerHTML = out;
+			}
+			function updateGamePrices(){
+				//document.getElementById("test001").innerHTML = document.getElementById("gamesTable").rows.length;
+				var inputArr = document.querySelectorAll('input');
+				document.getElementById("test001").innerHTML = inputArr[0];
+				//var inputs = document.querySelectorAll('input[name="price[]"].changed');
+				var asins = "";
+				var prices = "";
+				var firstFlag = true;
+				for(var i = 0; i < inputArr.length; i++){
+					if(firstFlag){
+						firstFlag = false;
+						asins += inputArr[i].id ;
+						prices += inputArr[i].value ;
+					}else{
+						asins += "-" + inputArr[i].id ;
+						prices += "-" + inputArr[i].value  ;
+					}
+				}
+				document.getElementById("test001").innerHTML  = asins;
+				document.getElementById("test002").innerHTML  = prices;
+				
+				var url = "../../cgi-bin/updateGamesPrice_zqw.cgi";
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function(){
+					if(this.readyState == 4 && this.status == 200){//&& this.status == 200
+						getResultResponse(this.responseText);
+					}
+				}
+				//document.getElementById("test001").innerHTML = "test_2";//test
+				var param = "asin="+asins+"&price="+prices;
+				xmlhttp.open("POST",url,true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send(param); 
+				
+			}
+			function getResultResponse(response){
+				document.getElementById("test001").innerHTML = "success";
+				getGames();
+			}
+		</script>
+	</head>
+	<body>
+		<div id="test001"></div>
+		<div id="test002"></div>
+		<link rel="stylesheet" href="styles.css">
+		<nav id="nav01"></nav>
+		<script src="NavScript.js" type="text/JavaScript"></script>
+		<div id="alert" class="alert" style="display:none"></div>
+		<h3>Change Game Prices</h3>
+		<table id="gamesTable">
+		<tr><th>ASIN</th><th>Title</th><th>Price</th></tr>
+		<tbody id="games"></tbody>
+		</table>
+		<button id="Submit" onclick="updateGamePrices()">Submit</button>
+		<button id="back"  onclick="location.href='administorMain_zqw.html'">Back</button>
+		
+	</body>
+</html>

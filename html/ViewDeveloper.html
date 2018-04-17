@@ -1,0 +1,53 @@
+
+<html>
+	<body>
+		<nav id="nav01"></nav>
+		<script src="NavScript.js"></script>
+		<h3>Developer Information</h3>
+		<span id="debug"></span>
+		<p>Developer Name: <span id="dev_name"></span></p>
+		<p>Games Developed:</p>
+		<span id="dev_games"></span>
+	</body>
+</html>
+
+<script>
+	var xmlhttp = new XMLHttpRequest();
+	var url = "../../cgi-bin/513/1/FullDevInfo.cgi" + window.location.search
+	xmlhttp.onreadystatechange = function()
+	{
+		if(this.readyState == 4 && this.status == 200)
+		{
+			parseFullDevInfo( this.responseText );
+		}
+	}
+	xmlhttp.open("GET",url,true);
+	xmlhttp.send();
+
+	function parseFullDevInfo( response )
+	{
+		//document.getElementById("debug").innerHTML = response;
+		var info = JSON.parse(response);
+		if(info.hasOwnProperty("Name"))
+		{
+			document.getElementById("dev_name").innerHTML = info.Name;
+		}
+		var out = "";
+		var arr = info.Games;
+		if(arr.length == 0)
+		{
+			out += "No known games have been developed";
+		}
+		else
+		{
+			var i;
+			for(i = 0; i < arr.length; i++)
+			{
+				out += "<a href=\"view_games.html?asin=" + arr[i].Asin + "\">" + arr[i].Title + "</a><br />";
+			}
+		}
+		document.getElementById("dev_games").innerHTML = out;
+	}
+
+</script>
+

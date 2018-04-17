@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript">
+			window.onload=function(){ 
+				getGames();
+				getCustomers();
+			} 
+			function getGames(){
+				var url = "../../cgi-bin/getGames_zqw.cgi";
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function(){
+					if(this.readyState == 4 && this.status == 200){//&& this.status == 200
+						getDevelerpsResponse(this.responseText);
+					}
+				}
+				//document.getElementById("test001").innerHTML = "test_2";//test
+				var param = "";
+				xmlhttp.open("POST",url,true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send(param); 
+			}
+			function getDevelerpsResponse(response){
+				//document.getElementById("test001").innerHTML = response;//test			
+				//var result = JSON.parse(response);
+				var result = eval('(' + response + ')');
+				//alert(result[0].Asin);//test	
+				var out = "";
+				var i;
+				
+				for(var i = 0; i < result.length; i++){
+					out += '<tr><td>'+result[i].Asin+'</td><td><a href="listGameWith_LinkDev_zqw.html?Asin='+result[i].Asin+'">'
+					+result[i].Title+'</a></td><td>'+result[i].Price
+					+'</td><td><a href="addDevelopersToGame_zqw.html?Asin='+result[i].Asin+'">AddDeveloper</a></td></tr>';
+				}
+				document.getElementById("games").innerHTML = out;
+				getdevelopers();
+			}
+			function getdevelopers(){
+				var url = "../../cgi-bin/getDevelopers_zqw.cgi";
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function(){
+					if(this.readyState == 4 && this.status == 200){//&& this.status == 200
+						getDevelerpsR(this.responseText);
+					}
+				}
+				//document.getElementById("test001").innerHTML = "test_2";//test
+				var param = "";
+				xmlhttp.open("POST",url,true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send(param); 
+			}
+			function getDevelerpsR(response){			
+				//var result = JSON.parse(response);
+				var result = eval('(' + response + ')');
+				//alert(result[0].Name);	
+				var out = "";
+				var i;
+				
+				for(var i = 0; i < result.length; i++){
+					out += '<tr><td>'+result[i].Id+'</td><td><a href="listDeveloper_withLinkTitle.html?name='+result[i].Name+'">'+result[i].Name+'</a></td></tr>';
+				}
+				document.getElementById("developers").innerHTML = out;
+				
+			}
+			function getCustomers(){
+				var url = "../../cgi-bin/getCustomers_zqw.cgi";
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function(){
+					if(this.readyState == 4 && this.status == 200){//&& this.status == 200
+						document.getElementById("test001").innerHTML = this.readyState;//test
+						document.getElementById("test002").innerHTML = this.status;//test
+						getCustomersR(this.responseText);
+					}
+				}
+				//document.getElementById("test001").innerHTML = "test_2";//test
+				var param = "";
+				xmlhttp.open("POST",url,true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send(param); 
+			}
+			function getCustomersR(response){			
+				//var result = JSON.parse(response);
+				alert(response);
+				var result = eval('(' + response + ')');
+				//alert(result[0].Name);	
+				var out = "";
+				var i;
+				
+				for(var i = 0; i < result.length; i++){
+					out += '<tr><td><a href="listCustomer_withLinkTitle.html?name='+result[i].Name+'">'+result[i].Name+'</a></td></tr>';
+				}
+				document.getElementById("customers").innerHTML = out;
+				
+			}
+			
+		</script>
+	
+	</head>
+	<body>
+		<div id="test001"></div>
+		<div id="test002"></div>
+		<link rel="stylesheet" href="styles.css">
+		<nav id="nav01"></nav>
+		<table>
+			<tr>
+				<th width="150px"></th>
+				<th>
+					<h3>All Games</h3>
+					<table>
+						<tr><th>ASIN</th><th>Title</th><th>Price</th><th>Operate</th></tr>
+						<tbody id="games" height="200px"></tbody>
+					</table>
+				</th>
+				<th width="100px"></th>
+				<th>
+					<h3>Developers</h3>
+					<table>
+						<tr><th>ID</th><th>Name</th></tr>
+						<tbody id="developers" height="200px"></tbody>
+					</table>
+				</th>
+				<th width="100px"></th>
+				<th>
+					<h3>Customers</h3>
+					<table>
+						<tr><th>Name</th></tr>
+						<tbody id="customers" height="200px"></tbody>
+					</table>
+				</th>
+			</tr>
+		</table>
+		
+	</body>
+</html>

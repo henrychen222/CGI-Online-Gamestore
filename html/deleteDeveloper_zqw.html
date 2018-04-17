@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script type="text/javascript">
+			window.onload=function(){ 
+
+				//document.getElementById("test001").innerHTML = "test_111";//test
+				getDevelop();
+			} 
+			function getDevelop(){
+				var url = "../../cgi-bin/getDevelopers_zqw.cgi";
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function(){
+					if(this.readyState == 4 && this.status == 200){//&& this.status == 200
+						getDevelerpsResponse(this.responseText);
+					}
+				}
+				//document.getElementById("test001").innerHTML = "test_2";//test
+				var param = "";
+				xmlhttp.open("POST",url,true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send(param); 
+			}
+			function getDevelerpsResponse(response){
+				//document.getElementById("test001").innerHTML = response;//test	
+				
+				
+				var result = eval('(' + response + ')');	
+				var out = "";
+				var i;
+				
+				
+				for(i = 0; i < result.length; i++)
+				{
+					out += "&nbsp; &nbsp; &nbsp; &nbsp;<input type=\"checkbox\" id=\""+result[i].Id+"\" name=\"" + result[i].Name +
+						"\" />" + result[i].Name + "<br />"
+				}
+				
+				document.getElementById("developers").innerHTML = out;
+			}
+			function deletes(){
+				document.getElementById("test001").innerHTML = "test_2";//test
+				deletesss();
+			}
+			function deletesss(){
+				//document.getElementById("test001").innerHTML = document.getElementById("gamesTable").rows.length;
+				var inputArr = document.querySelectorAll('input');
+				document.getElementById("test001").innerHTML = inputArr[0];
+				document.getElementById("test001").innerHTML = inputArr[0].checked;
+				document.getElementById("test002").innerHTML = inputArr[0].name;
+				//var inputs = document.querySelectorAll('input[name="price[]"].changed');
+				var Ids = "";
+				var Names = "";
+				var firstFlag = true;
+				for(var i = 0; i < inputArr.length; i++){
+					if(inputArr[i].checked){
+						if(firstFlag){
+							firstFlag = false;
+							Ids += inputArr[i].id ;
+							Names += inputArr[i].name ;
+						}else{
+							Ids += "-" + inputArr[i].id ;
+							Names += "-" + inputArr[i].name  ;
+						}
+					
+					}
+					
+				}
+				//document.getElementById("test001").innerHTML  = Ids;
+				//document.getElementById("test002").innerHTML  = Names;
+				sss(Ids,Names);
+			}	
+			function sss(Ids,Names){
+				document.getElementById("test001").innerHTML = "here";
+				var url = "../../cgi-bin/deleteDevelopers_zqw.cgi";
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function(){
+					if(this.readyState == 4 && this.status == 200){//&& this.status == 200
+						getResultResponse(this.responseText);
+					}
+				}
+				var param = "ids="+Ids+"&names="+Names;
+				xmlhttp.open("POST",url,true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send(param); 
+				
+			}
+			function getResultResponse(response){
+				document.getElementById("test001").innerHTML = response;
+				getDevelop();
+			}
+		</script>
+	</head>
+	<body>
+		<div id="test001"></div>
+		<div id="test002"></div>
+		<link rel="stylesheet" href="styles.css">
+		<nav id="nav01"></nav>
+		<script src="NavScript.js" type="text/JavaScript"></script>
+		<div id="alert" class="alert" style="display:none"></div>
+		<h3>Delete Developers</h3>
+		<form method="post" action="../../cgi-bin/513/1/DeleteDevelopers.cgi">
+			<span id="developers">...............<br /></span>
+			<br />
+			<input type="button" name="act" value="delete" onclick="deletes()"/>
+		</form>
+		
+		<button id="back"  onclick="location.href='administorMain_zqw.html'">Back</button>
+		
+	</body>
+</html>

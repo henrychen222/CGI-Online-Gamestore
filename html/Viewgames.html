@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html>
+	<body>
+		<nav id="nav01"></nav>
+		<script src="NavScript.js"></script>
+		<h3>Game Information</h3>
+		<span id="debug"></span> 
+		<a id="edit_button" href="#" >Edit</a>
+		<p>ASIN: <span id="game_asin"></span>
+		<p>Game Title: <span id="game_title"></span></p>
+		<p>Price: $<span id="game_price">0.00</span></p>
+		<p>Developers:</p><br>
+		<span id="game_devs"></span>
+	</body>
+</html>
+
+<script>
+	document.getElementById("edit_button").href = "enter_games.html" + window.location.search;
+	var xmlhttp = new XMLHttpRequest();
+	var url = "../../cgi-bin/513/1/FullGameInfo.cgi" + window.location.search;
+	xmlhttp.onreadystatechange = function()
+	{
+		//document.getElementById("game_title").innerHTML = this.readyState + " " + this.status;
+		if ( this.readyState == 4 && this.status == 200)
+		{
+			parseFullGameInfo( this.responseText );			
+		}
+	}
+	xmlhttp.open ( "GET", url, true);
+	xmlhttp.send();
+
+	function parseFullGameInfo( response )
+	{
+		//document.getElementById("debug").innerHTML = response;
+		var info = JSON.parse( response )
+		if(info.hasOwnProperty("Asin"))
+		{
+			document.getElementById("game_asin").innerHTML = info.Asin;
+		}
+		if(info.hasOwnProperty("Title"))
+		{
+			document.getElementById("game_title").innerHTML = info.Title;
+		}
+		if(info.hasOwnProperty("Price"))
+		{
+			document.getElementById("game_price").innerHTML = info.Price
+		}
+		var out = "";
+		var arr = info.Devs;
+		if( arr.length == 0)
+		{
+			out += "No known developers"
+		}
+		else
+		{
+			var i;
+			for(i = 0; i < arr.length; i++)
+			{
+				out += "<a href=\"view_developer.html?id=" + arr[i].Id + "\">" + arr[i].Name + "</a><br />";
+			}
+			document.getElementById("game_devs").innerHTML = out;
+		}
+	}
+
+	//document.getElementById("edit_button").onclick = function() {
+	//	this.href = "enter_games.html" + window.location.search;
+	//	document.getElementById("debug").innerHTML = "enter_games.html" + window.location.search;
+	//	return false;
+	//}
+</script>
+

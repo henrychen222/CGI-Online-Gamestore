@@ -1,0 +1,45 @@
+<html>
+	<body>
+		<nav id="nav01"></nav>
+		<script src="NavScript.js"></script>
+		<h3>Delete Developers</h3>
+		<form method="post" action="../../cgi-bin/513/1/DeleteDevelopers.cgi">
+			<span id="devs">Loading...<br /></span>
+			<input type="submit" name="act" value="Submit" />
+		</form>
+	</body>
+</html>
+
+<script>
+	var xmlhttp = new XMLHttpRequest();
+	var url = "../../cgi-bin/513/1/DeveloperInfo.cgi";
+	xmlhttp.onreadystatechange = function()
+	{
+		if ( this.readyState == 4 && this.status == 200)
+		{
+			prepareDevsForDelete( this.responseText );			
+		}
+	}
+	xmlhttp.open ( "GET", url, true);
+	xmlhttp.send();
+
+	function prepareDevsForDelete( response )
+	{
+		var arr = JSON.parse( response )
+		var i;
+		var out = "";
+		if( arr.length == 0)
+		{
+			out += "<p>No developers to delete</p>";
+		}
+		else
+		{
+			for(i = 0; i < arr.length; i++)
+			{
+				out += "<input type=\"checkbox\" name=\"" + arr[i].Id +
+					"\" />" + arr[i].Name + "<br />"
+			}
+		}
+		document.getElementById("devs").innerHTML = out;
+	}
+</script>

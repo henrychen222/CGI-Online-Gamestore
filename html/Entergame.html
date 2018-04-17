@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title id="title_text"></title>
+	</head>
+	<body>
+		<nav id="nav01"></nav>
+		<script src="NavScript.js"></script>
+		<h3 id="header_text">Enter Games</h3>
+		<span id="debug"></span>
+		<form method="post" action="../../cgi-bin/513/1/InsertGame.cgi">
+			ASIN: <input id="asin" type="text" name="asin" />
+			<br />
+			Title: <input id="title" type="text" name="title" />
+			<br />
+			Price: <input id="price" type="number" name="price" step="0.01" min="0.00" />
+			<br />
+			Developers: 
+			<br />
+			<span id="no_devs"></span>
+			<select id="developers" name="developers" multiple size="5">
+			</select>
+			<br />
+			<input type="submit" name="act" value="Submit" />
+		</form>
+	</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+<script>
+	if(window.location.search == ""){
+		document.getElementById("title_text").innerHTML = "Enter New Game";
+		document.getElementById("header_text").innerHTML = "Enter New Game";
+	} else {
+		document.getElementById("title_text").innerHTML = "Edit Game";
+		document.getElementById("header_text").innerHTML = "Edit Game";
+	}
+	var xmlhttp = new XMLHttpRequest();
+	var url = "../../cgi-bin/513/1/DeveloperInfo.cgi";
+	xmlhttp.onreadystatechange = function() 
+	{
+		//document.getElementById("debug").innerHTML = this.readyState + " " + this.status;
+		if(this.readyState == 4 && this.status == 200)
+		{
+			loadDevs( this.responseText );
+		}
+	}
+	xmlhttp.open("GET",url,true);
+	xmlhttp.send();
+
+	function loadDevs( response )
+	{
+		//document.getElementById("debug").innerHTML = response;
+		var arr = JSON.parse( response );
+		var i;
+		if(arr.length == 0)
+		{
+			document.getElementById("no_devs").innerHTML = "No developers have been registered";	
+		}
+		else
+		{
+			var out = "";
+			for(i = 0; i < arr.length; i++)
+			{
+				out += "<option value=\"" + arr[i].Id + "\" >"+arr[i].Name + "</option>";
+			}
+			document.getElementById("developers").innerHTML = out;
+		}
+		if(window.location.search != "")
+		{
+			var xmlhttp2 = new XMLHttpRequest();
+			var url = "../../cgi-bin/513/1/FullGameInfo.cgi" + window.location.search;
+			xmlhttp2.onreadystatechange = function()
+			{
+				if(this.readyState == 4 && this.status == 200)
+				{
+					displayInfo( this.responseText);
+				}
+			}
+		}
+		xmlhttp2.open("GET",url,true);
+		xmlhttp2.send();
+	}
+
+	function displayInfo( response )
+	{
+		var info = JSON.parse( response );
+		if(info.hasOwnProperty("Asin"))
+		{
+			document.getElementById("asin").value = info.Asin;
+			document.getElementById("asin").readOnly = true;
+			document.getElementById("asin").style.backgroundColor = "LightGrey";
+		}
+		if(info.hasOwnProperty("Title"))
+		{
+			document.getElementById("title").value = info.Title;
+		}
+		if(info.hasOwnProperty("Price"))
+		{
+			document.getElementById("price").value = info.Price;
+		}
+		var devs = [];
+		var arr = info.Devs;
+		var i = 0;
+		var select  = document.getElementById("developers");
+		for(i = 0; i < arr.length; i++)
+		{
+			for(var j = 0, end = select.options.length, o; j < end; j++)
+			{
+				o = select.options[j];
+				if(o.value == arr[i].Id)
+				{
+					o.selected = true;
+				}
+			}
+			
+		}
+	}
+</script>
+
+-->
+
