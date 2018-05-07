@@ -1,0 +1,111 @@
+================参照===========================
+create table SYS_USER
+(
+  id                     NUMBER,
+  user_name              VARCHAR2(50 CHAR),
+  password               VARCHAR2(50),
+  real_name              VARCHAR2(50 CHAR),
+  user_status            INTEGER,
+  department_id          NUMBER,
+  position               VARCHAR2(50 CHAR),
+  mobile_num             VARCHAR2(50),
+  tel_num                VARCHAR2(50),
+  email                  VARCHAR2(50 CHAR),
+  pwd_latest_time        DATE,
+  create_time            DATE,
+  role_id                NUMBER,
+  parent_user_id         VARCHAR2(100),
+  parent_user_ids        VARCHAR2(100),
+  oa_id                  VARCHAR2(50),
+  oa_job_no              VARCHAR2(50),
+  oa_location            VARCHAR2(100),
+  oa_type                VARCHAR2(50),
+  oa_department          VARCHAR2(100),
+  oa_department_fullname VARCHAR2(200),
+  is_tieta               INTEGER default 0,
+  source                 INTEGER default 0
+)
+;
+===========================================
+create table developers(
+id                     NUMBER,
+developer_name         VARCHAR2(50 CHAR),
+password               VARCHAR2(50)
+)
+;
+===========================================
+-- Create sequence 
+create sequence developers_seq
+minvalue 1
+maxvalue 9999999999999999999
+start with 1
+increment by 1
+cache 20;
+
+================================================
+
+1、创建类型animal_ty：此类型中，对于每个动物都包含有一个记录，记载了其品种、名称和出生日期信息。
+
+CREATE TYPE developerObjZqw_ty AS OBJECT ( 
+name varchar2(50)); 
+
+
+2、创建animals_nt：此类型将用作一个嵌套表的基础类型。
+
+CREATE TYPE developerObjZqw_bas as table of developerObjZqw_ty;
+
+3、创建表breeder：饲养员的信息表
+
+create table GAME_ZQW
+(gameName varchar2(50),
+developers developerObjZqw_bas)
+nested table developers store as developerObjZqw_bas_tab;
+
+4、向嵌套表中插入记录
+
+insert into GAME_ZQW
+values('shoot',developerObjZqw_bas (developerObjZqw_ty('zqw'),
+developerObjZqw_ty('mahuteng')
+));
+
+5、查询嵌套表
+
+select name,birthdate from 
+table(select animals from breeder);
+
+select name,birthdate from 
+table(select animals from breeder 
+where breedername='03y');
+
+select breedername,name,birthdate from
+breeder a,table(a.animals) b
+
+
+======================================================================
+================================================
+
+1、创建类型animal_ty：此类型中，对于每个动物都包含有一个记录，记载了其品种、名称和出生日期信息
+
+CREATE TYPE GameZqw_ty AS OBJECT ( 
+title varchar2(50)); 
+
+
+2、创建animals_nt：此类型将用作一个嵌套表的基础类型。
+
+CREATE TYPE GameObjZqw_bas as table of GameZqw_ty;
+
+3、创建表breeder：饲养员的信息表
+
+create table Customer_ZQW
+(name varchar2(50),
+games GameObjZqw_bas)
+nested table games store as GameObjZqw_bas_tab;
+
+4、向嵌套表中插入记录
+
+insert into GAME_ZQW
+values('shoot',developerObjZqw_bas (developerObjZqw_ty('zqw'),
+developerObjZqw_ty('mahuteng')
+));
+
+insert into Customers_ZQW values('zqw',GamesObjZqw_bas(GamesZqw_ty('Shopping guide',1)));
