@@ -6,6 +6,6 @@ http://wenchen.cs.und.edu/course/513/exercise/1/ (Professor's website, may chang
 
 OR
 
-https://weichen.neocities.org/513_Exercise1.html  
+https://weichen.neocities.org/513_Exercise1.html  (My Website)
 
 Time: 09/2017 ~ 12/2017
